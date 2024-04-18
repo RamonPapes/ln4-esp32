@@ -5,6 +5,13 @@
         "istream": "cpp",
         "numeric": "cpp",
         "ostream": "cpp",
-        "sstream": "cpp"
+        "sstream": "cpp",
+        "cstdlib": "cpp",
+        "cmath": "cpp",
+        "stdlib.h": "c",
+        "esp_compiler.h": "c",
+        "freertosconfig.h": "c",
+        "portable.h": "c",
+        "freertosconfig_arch.h": "c"
     }
 }
