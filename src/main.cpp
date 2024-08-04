@@ -1,15 +1,17 @@
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "GPIO/gpio.hpp"
-
-Gpio pin2(GPIO_NUM_2);
-
-void portela(Gpio my_pin, void * args){
-    printf("Hello World!!\n");
-}
 
 extern "C" void app_main() 
 {
-    pin2.init();
-    pin2.interrupt(GPIO_INTR_NEGEDGE, portela);
+    Gpio pin(GPIO_NUM_2);
+    pin.init();
 
-    while(1) vTaskDelay(1);
+    while (1)
+    {
+        uint8_t val = pin.read();
+        printf("\n\tLeitura:\t%d\n", val);
+        vTaskDelay(1000/portTICK_PERIOD_MS);
+    }
+    
 }

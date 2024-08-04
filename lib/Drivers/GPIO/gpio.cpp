@@ -39,26 +39,23 @@ bool Gpio::read()
 }
 void Gpio::toggle()
 {
-    bool value = this->read();
-    value = !value;
-    gpio_set_level(m_pin, value);
+    gpio_set_level(m_pin, !gpio_get_level(m_pin));
 }
 
 static QueueHandle_t gpio_evt_queue = NULL;
 
 static void IRAM_ATTR gpio_isr_handler(void *arg)
 {
-    uint32_t gpio_num = (uint32_t)arg;
-    xQueueSendFromISR(gpio_evt_queue, &gpio_num, NULL);
+    Gpio *m_gpio = (Gpio *)arg;
+    xQueueSendFromISR(gpio_evt_queue, &m_gpio, NULL);
 }
 
 static void gpio_task_interrupt(void *arg)
 {
-    uint32_t gpio_num;
-    Gpio *m_gpio = (Gpio *)arg;
+    Gpio *m_gpio;
     for (;;)
     {
-        if (xQueueReceive(gpio_evt_queue, &gpio_num, portMAX_DELAY))
+        if (xQueueReceive(gpio_evt_queue, &m_gpio, portMAX_DELAY))
         {
             if (m_gpio->m_func == nullptr)
                 continue;
@@ -76,14 +73,15 @@ void Gpio::interrupt(gpio_int_type_t intr_type, void (*func)(Gpio self, void *ar
 
     if (!init_itr)
     {
-        gpio_evt_queue = xQueueCreate(10, sizeof(uint32_t));
+        gpio_evt_queue = xQueueCreate(10, sizeof(Gpio *));
 
-        xTaskCreate(gpio_task_interrupt, "gpio_task_interrupt", 2048, this, 10, NULL);
+        xTaskCreate(gpio_task_interrupt, "gpio_task_interrupt", 2048, NULL, 10, NULL);
 
         gpio_install_isr_service(0);
+        
+        init_itr = true;
     }
 
-    init_itr = true;
 
-    gpio_isr_handler_add(m_pin, gpio_isr_handler, (void *)m_pin);
+    gpio_isr_handler_add(m_pin, gpio_isr_handler, this);
 }
