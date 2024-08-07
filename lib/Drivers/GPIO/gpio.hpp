@@ -1,3 +1,6 @@
+#ifndef GPIO_HPP
+#define GPIO_HPP
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -30,4 +33,6 @@ private:
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
