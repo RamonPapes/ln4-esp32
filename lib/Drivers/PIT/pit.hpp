@@ -22,13 +22,12 @@ extern "C"
         void stop();
         void reset();
         void write();
-        void delay();
+        static void delay();
         bool read();
         uint64_t get();
 
     private:
         gptimer_handle_t gptimer = NULL;
-        uint64_t readPITCounter();
         driverPITParammeters_t Timer;
     }
 

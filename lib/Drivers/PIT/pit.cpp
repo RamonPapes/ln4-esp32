@@ -30,7 +30,7 @@ void Pit::write(uint64_t countsToPerform)
     Timer.start_timer = currentPitCount;
 }
 
-void Pit::delay(uint64_t value)
+static void Pit::delay(uint64_t value)
 {
     vTaskDelay(value / portTICK_PERIOD_MS);
 }
