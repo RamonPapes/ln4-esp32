@@ -1,3 +1,6 @@
+#ifndef PIT_HPP
+#define PIT_HPP
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/queue.h"
@@ -13,24 +16,27 @@ extern "C"
         uint64_t start_timer;   
         uint64_t countLimit;
     } driverPITParammeters_t;
+
     class Pit
     {
 
-    public:
-        void init();
-        void start();
-        void stop();
-        void reset();
-        void write();
-        static void delay();
-        bool read();
-        uint64_t get();
+        public:
+            void init();
+            void start();
+            void stop();
+            void reset();
+            void write(uint64_t countsToPerform);
+            static void delay(uint64_t value);
+            bool read();
+            uint64_t get();
 
-    private:
-        gptimer_handle_t gptimer = NULL;
-        driverPITParammeters_t Timer;
-    }
+        private:
+            gptimer_handle_t gptimer = NULL;
+            driverPITParammeters_t Timer;
+    };
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
