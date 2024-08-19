@@ -13,11 +13,17 @@ extern "C" void app_main()
 
     while (1)
     {
+        //frente
         pin.write(6553);
         Pit::delay(1000);
+        //parar
         pin.write(4915);
         Pit::delay(1000);
+        //trás
         pin.write(3276);
+        Pit::delay(1000);
+        //parar
+        pin.write(4915);
         Pit::delay(1000);
     }
     
