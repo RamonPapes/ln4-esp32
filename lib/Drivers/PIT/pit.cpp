@@ -2,11 +2,13 @@
 
 void Pit::init()
 {
+    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     gptimer_config_t gptimer_config = {
         .clk_src = GPTIMER_CLK_SRC_DEFAULT,
         .direction = GPTIMER_COUNT_UP,
         .resolution_hz = 1000000,
     };
+    #pragma GCC diagnostic pop
     ESP_ERROR_CHECK(gptimer_new_timer(&gptimer_config, &gptimer));
     ESP_ERROR_CHECK(gptimer_enable(gptimer));
 }
@@ -30,7 +32,7 @@ void Pit::write(uint64_t countsToPerform)
     Timer.start_timer = currentPitCount;
 }
 
-static void Pit::delay(uint64_t value)
+void Pit::delay(uint64_t value)
 {
     vTaskDelay(value / portTICK_PERIOD_MS);
 }
@@ -44,7 +46,7 @@ bool Pit::read()
     uint64_t currentPitCount;
 
     currentPitCount = get();
-    if (currentPitCount >= Timer.CountLimit)
+    if (currentPitCount >= Timer.countLimit)
     {
         return true;
     }
