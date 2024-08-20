@@ -3,28 +3,24 @@
 #include "GPIO/gpio.hpp"
 #include "PIT/pit.hpp"
 #include "PWM/pwm.hpp"
+#include "Servo/servo.hpp"
 
 
 extern "C" void app_main() 
 {
-    PWM pin(GPIO_NUM_2, LEDC_TIMER_16_BIT, 50);
+    servo motor1(GPIO_NUM_2);
 
-    pin.init();
+    motor1.init();
 
     while (1)
     {
-        //frente
-        pin.write(6553);
+        motor1.front();
         Pit::delay(1000);
-        //parar
-        pin.write(4915);
+        motor1.stop();
         Pit::delay(1000);
-        //trás
-        pin.write(3276);
+        motor1.back();
         Pit::delay(1000);
-        //parar
-        pin.write(4915);
+        motor1.stop();
         Pit::delay(1000);
     }
-    
 }

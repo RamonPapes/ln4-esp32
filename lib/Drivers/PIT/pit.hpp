@@ -22,13 +22,17 @@ extern "C"
 
         public:
             void init();
+
             void start();
             void stop();
             void reset();
-            void write(uint64_t countsToPerform);
-            static void delay(uint64_t value);
-            bool read();
             uint64_t get();
+
+            void write(uint64_t countsToPerform);
+            bool read();
+
+            static void delay(uint64_t value);
+            
 
         private:
             gptimer_handle_t gptimer = NULL;
