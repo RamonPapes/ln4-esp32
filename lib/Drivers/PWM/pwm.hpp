@@ -18,8 +18,7 @@ private:
     gpio_num_t m_pin;
     ledc_channel_t m_channel;
 public:
-    PWM(gpio_num_t pin, ledc_timer_bit_t resolution);
-    ~PWM();
+    PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz = 0);
 
     void init();
     void write(uint32_t duty);

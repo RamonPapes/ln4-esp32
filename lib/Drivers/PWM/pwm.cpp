@@ -5,16 +5,17 @@ static uint8_t timer_lock[LEDC_TIMER_MAX];
 static uint8_t channel_lock[LEDC_SPEED_MODE_MAX][LEDC_CHANNEL_MAX];
 
 
-PWM::PWM(gpio_num_t pin, ledc_timer_bit_t resolution)
+PWM::PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz)
 {
     m_pin = pin;
     m_resolution = resolution;
+    m_freq_hz = freq_hz;
 }
 
 void PWM::init()
 {
     //definindo frequencia
-    m_freq_hz = 65536000/pow(2,(uint8_t)m_resolution);
+    if(m_freq_hz == 0) m_freq_hz = 65536000/pow(2,(uint8_t)m_resolution);
     
     //definindo timer
     for (uint8_t i = 0; i < LEDC_TIMER_MAX; i++)
@@ -52,6 +53,7 @@ void PWM::init()
     {
         timer_lock[m_timer] = 1;
 
+        #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
         ledc_timer_config_t ledc_timer = {
             .speed_mode = m_mode,
             .duty_resolution = m_resolution,
@@ -59,10 +61,12 @@ void PWM::init()
             .freq_hz = m_freq_hz,
             .clk_cfg = LEDC_USE_APB_CLK
         };
+        #pragma GCC diagnostic pop
         ledc_timer_config(&ledc_timer);
     }
 
     //construindo o channel
+    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
     ledc_channel_config_t ledc_channel = {
         .gpio_num = m_pin,
         .speed_mode = m_mode,
@@ -72,6 +76,7 @@ void PWM::init()
         .duty = 0,
         .hpoint = 0
     };
+    #pragma GCC diagnostic pop
     ledc_channel_config(&ledc_channel);
 }
 
