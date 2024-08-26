@@ -1,9 +1,6 @@
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "GPIO/gpio.hpp"
 #include "PIT/pit.hpp"
-#include "PWM/pwm.hpp"
 #include "Servo/servo.hpp"
+#include "Multiplexador_Analog/mult_analog.hpp"
 
 
 extern "C" void app_main() 
