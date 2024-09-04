@@ -12,7 +12,7 @@ PWM::PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz)
     m_freq_hz = freq_hz;
 }
 
-void PWM::init()
+void PWM::init(float max_input, float min_input, float input_1, float input_2, float output_1, float output_2)
 {
     //definindo frequencia
     if(m_freq_hz == 0) m_freq_hz = 65536000/pow(2,(uint8_t)m_resolution);
@@ -78,15 +78,54 @@ void PWM::init()
     };
     #pragma GCC diagnostic pop
     ledc_channel_config(&ledc_channel);
+
+    m_max_input = max_input;
+    m_min_input = min_input;
+
+    if(m_input_1 == m_input_2)
+    {
+        m_input_1 = m_max_input;
+        m_input_2 = m_min_input;
+        m_output_1 = pow(2,(uint8_t)m_resolution);
+        m_output_2 = 0;
+    }else
+    {
+        m_input_1 = input_1;
+        m_input_2 = input_2;
+        m_output_1 = output_1;
+        m_output_2 = output_2;
+    }
 }
 
-void PWM::write(uint32_t duty)
+void PWM::write(float duty)
 {
-    ledc_set_duty(m_mode, m_channel, duty);
+    ledc_set_duty(m_mode, m_channel, calculate_duty(duty));
     ledc_update_duty(m_mode, m_channel);
 }
 
-uint32_t PWM::getDuty()
+float PWM::getDuty()
 {
-    return ledc_get_duty(m_mode, m_channel);
+    return inv_calculate_duty(ledc_get_duty(m_mode, m_channel));
+}
+
+uint32_t PWM::calculate_duty(float duty)
+{
+    if(m_max_input == 0 && m_min_input == 0) return duty;
+    
+    if(duty > m_max_input) duty = m_max_input;
+    if(duty < m_min_input) duty = m_min_input;
+
+    float coeficiente_angular = (m_output_1 - m_output_2)/(m_input_1 - m_input_2);
+    return (duty - m_input_2)*coeficiente_angular + m_output_2;
+}
+
+float PWM::inv_calculate_duty(uint32_t duty)
+{
+    if(m_max_input == 0 && m_min_input == 0) return duty;
+    
+
+    float coeficiente_angular = (m_output_1 - m_output_2)/(m_input_1 - m_input_2);
+    return (duty - m_output_2)/coeficiente_angular + m_input_2;
+    
+    
 }
