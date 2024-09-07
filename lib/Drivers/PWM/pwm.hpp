@@ -20,17 +20,15 @@ private:
 
     float m_max_input;
     float m_min_input;
-    float m_input_1;
-    float m_input_2;
-    float m_output_1;
-    float m_output_2;
+    float m_max_output;
+    float m_min_output;
 
     uint32_t calculate_duty(float duty);
     float inv_calculate_duty(uint32_t duty);
 public:
     PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz = 0);
 
-    void init(float max_input = 0, float min_input = 0, float input_1 = 0, float input_2 = 0, float output_1 = 0, float output_2 = 0);
+    void init(float max_input = 0, float min_input = 0, float max_output = 0, float min_output = 0);
     void write(float duty);
     float getDuty();
 };
