@@ -10,7 +10,6 @@
 class PWM
 {
 private:
-    /* data */
     ledc_timer_bit_t m_resolution;
     ledc_mode_t m_mode;
     ledc_timer_t m_timer;

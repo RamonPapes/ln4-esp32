@@ -3,12 +3,20 @@
 
 #include "PWM/pwm.hpp"
 
+typedef enum
+{
+    SERVO_CONTINUO,
+    SERVO_POSICA0_180,
+    SERVO_QTY
+}servo_mode_t;
+
 class servo
 {
+    
     public:
-        servo(gpio_num_t pin, ledc_timer_bit_t resolution = LEDC_TIMER_16_BIT, uint32_t freq_hz = 50, uint32_t duty_max = 9150, uint32_t duty_min = 700);
+        servo(PWM &Pin);
 
-        void init();
+        void init(servo_mode_t mode);
 
         void set_max_power(float value);
         float get_max_power();
@@ -25,14 +33,15 @@ class servo
 
     private:
 
-        PWM *m_pwm;
+        float calculate_PWM(float data);
+        float inv_calculate_PWM(float data);
 
-        gpio_num_t m_pin;
-        ledc_timer_bit_t m_resolution;
-        uint32_t m_freq_hz;
-        uint32_t m_duty_max;
-        uint32_t m_duty_min;
-        uint32_t m_duty_stop;
+        PWM &m_Pin;
+
+        float m_max_input;
+        float m_min_input;
+        float m_max_output;
+        float m_min_output;
 
         float m_power = 1;
         float m_max_power = 1;

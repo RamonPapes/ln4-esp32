@@ -1,23 +1,25 @@
 #include "PIT/pit.hpp"
 #include "Servo/servo.hpp"
-#include "Multiplexador_Analog/mult_analog.hpp"
+#include "Multiplexador/MUX_ADC.hpp"
 
 
 extern "C" void app_main() 
 {
-    servo motor1(GPIO_NUM_2);
+    PWM pwm_servo(GPIO_NUM_2, LEDC_TIMER_16_BIT, 50);
+    servo motor_1(pwm_servo);
 
-    motor1.init();
+    pwm_servo.init(20, 0);
+    motor_1.init(SERVO_CONTINUO);
 
     while (1)
     {
-        motor1.front();
+        motor_1.front();
         Pit::delay(1000);
-        motor1.stop();
+        motor_1.stop();
         Pit::delay(1000);
-        motor1.back();
+        motor_1.back();
         Pit::delay(1000);
-        motor1.stop();
+        motor_1.stop();
         Pit::delay(1000);
     }
 }

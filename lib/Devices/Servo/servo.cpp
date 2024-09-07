@@ -1,22 +1,17 @@
 
 #include "servo.hpp"
 
-servo::servo(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz, uint32_t duty_max, uint32_t duty_min)
+float servo_mode[SERVO_QTY][4] = {{1, -1, 2.79, 0.214}, {90, -90, 2, 1}};
+
+servo::servo(PWM &Pin) : m_Pin(Pin) {}
+
+void servo::init(servo_mode_t mode)
 {
-    m_pin = pin;
-    m_resolution = resolution;
-    m_freq_hz = freq_hz;
-    m_duty_max = duty_max;
-    m_duty_min = duty_min;
-}
+    m_max_input = servo_mode[mode][0];
+    m_min_input = servo_mode[mode][1];
 
-
-void servo::init()
-{
-    m_pwm = new PWM(m_pin, m_resolution, m_freq_hz);
-
-    m_pwm->init();
-
+    m_max_output = servo_mode[mode][2];
+    m_min_output = servo_mode[mode][3];
 }
 
 void servo::set_max_power(float value)
@@ -34,25 +29,18 @@ float servo::get_max_power()
 
 void servo::write(float value)
 {
-    if(value > 1) value = 1;
-    else if(value < -1) value = -1;
-
-    uint32_t buf = (m_duty_max - m_duty_min)*((m_max_power*value + 1)/2) + m_duty_min;
-
-    m_pwm->write(buf);
+    m_Pin.write(calculate_PWM(value*m_max_power));
 }
 
 float servo::read()
 {
-    float buf = ((((float)m_pwm->getDuty() - m_duty_min)/(m_duty_max - m_duty_min))*2 - 1)/m_max_power;
-
-    return buf;
+    return inv_calculate_PWM(m_Pin.getDuty())/m_max_power;
 }
 
 void servo::set_power(float value)
 {
-    if(value > 1) value = 1;
-    else if(value < -1) value = -1;
+    if(value > m_max_input) value = m_max_input;
+    if(value < m_min_input) value = m_min_input;
     
     m_power = value;
 }
@@ -64,22 +52,31 @@ float servo::get_power()
 
 void servo::front()
 {
-    uint32_t buf = (((m_duty_max - m_duty_min)*(m_max_power*m_power + 1)/2) + m_duty_min);
-
-    m_pwm->write(buf);
+    m_Pin.write(calculate_PWM(m_power*m_max_power));
 }
 
 void servo::back()
 {
-    uint32_t buf = ((m_duty_max - m_duty_min)*((1 - m_max_power*m_power)/2) + m_duty_min);
-
-    m_pwm->write(buf);
+    m_Pin.write(calculate_PWM(-m_power*m_max_power));
 }
 
 void servo::stop()
 {
-    uint32_t buf = (m_duty_max + m_duty_min)/2;
-
-    m_pwm->write(buf);
+    m_Pin.write(calculate_PWM(0));
 }
 
+
+float servo::calculate_PWM(float data)
+{
+    if(data > m_max_input) data = m_max_input;
+    if(data < m_min_input) data = m_min_input;
+
+    float coeficiente_angular = (m_max_output - m_min_output)/(m_max_input - m_min_input);
+    return (data - m_min_input)*coeficiente_angular + m_min_output;
+}
+
+float servo::inv_calculate_PWM(float data)
+{
+    float coeficiente_angular = (m_max_output - m_min_output)/(m_max_input - m_min_input);
+    return (data - m_min_output)/coeficiente_angular + m_min_input;
+}
