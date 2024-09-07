@@ -32,7 +32,7 @@ class MUX_ADC
         };
 
     public:
-        MUX_ADC(Gpio &S0, Gpio &S1, Gpio &S2, Adc &PIN);
+        MUX_ADC(Adc &PIN, Gpio &S0, Gpio &S1, Gpio &S2);
 
         void init();
 

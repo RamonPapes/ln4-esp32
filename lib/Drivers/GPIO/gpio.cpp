@@ -2,6 +2,8 @@
 
 bool init_itr = false;
 
+Gpio::Gpio() {}
+
 Gpio::Gpio(gpio_num_t pin)
 {
     m_pin = pin;

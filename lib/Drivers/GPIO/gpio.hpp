@@ -12,6 +12,9 @@
 
 class Gpio{
 
+protected:
+    Gpio();
+
 public:
     Gpio(gpio_num_t pin);
     Gpio(gpio_num_t pin, gpio_pullup_t pullup, gpio_pulldown_t pulldown);

@@ -1,6 +1,6 @@
 #include "MUX_ADC.hpp"
 
-MUX_ADC::MUX_ADC(Gpio &S0, Gpio &S1, Gpio &S2, Adc &PIN)
+MUX_ADC::MUX_ADC(Adc &PIN, Gpio &S0, Gpio &S1, Gpio &S2)
     : m_S0(S0), m_S1(S1), m_S2(S2), m_PIN(PIN),
         channel_0(*this),
         channel_1(*this),
