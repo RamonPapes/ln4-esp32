@@ -13,6 +13,8 @@ class MUX_ADC
         Adc &m_PIN;
 
         uint8_t m_id_mult = 0; 
+
+        bool m_has_init = false;
         
     private:
         class channel_MUX_ADC : public Adc
