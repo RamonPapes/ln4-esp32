@@ -14,6 +14,8 @@ PWM::PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz)
 
 void PWM::init(float max_input, float min_input, float max_output, float min_output)
 {
+    if(m_has_init) return;
+
     //definindo frequencia
     if(m_freq_hz == 0) m_freq_hz = 65536000/pow(2,(uint8_t)m_resolution);
     
@@ -100,16 +102,22 @@ void PWM::init(float max_input, float min_input, float max_output, float min_out
         m_max_output = max_output;
         m_min_output = min_output;
     }
+
+    m_has_init = true;
 }
 
 void PWM::write(float duty)
 {
+    if(!m_has_init) return;
+
     ledc_set_duty(m_mode, m_channel, calculate_duty(duty));
     ledc_update_duty(m_mode, m_channel);
 }
 
 float PWM::getDuty()
 {
+    if(!m_has_init) return;
+
     return inv_calculate_duty(ledc_get_duty(m_mode, m_channel));
 }
 
@@ -127,10 +135,7 @@ uint32_t PWM::calculate_duty(float duty)
 float PWM::inv_calculate_duty(uint32_t duty)
 {
     if(m_max_input == 0 && m_min_input == 0) return duty;
-    
 
     float coeficiente_angular = (m_max_output - m_min_output)/(m_max_input - m_min_input);
     return (duty - m_min_output)/coeficiente_angular + m_min_input;
-    
-    
 }

@@ -24,6 +24,8 @@ private:
 
     uint32_t calculate_duty(float duty);
     float inv_calculate_duty(uint32_t duty);
+
+    bool m_has_init = false;
 public:
     PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz = 0);
 

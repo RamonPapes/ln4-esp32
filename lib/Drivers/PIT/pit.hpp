@@ -37,6 +37,8 @@ extern "C"
         private:
             gptimer_handle_t gptimer = NULL;
             driverPITParammeters_t Timer;
+
+            bool m_has_init = false;
     };
 
 #ifdef __cplusplus
