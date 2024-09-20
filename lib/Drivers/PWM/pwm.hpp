@@ -29,7 +29,7 @@ private:
 public:
     PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz = 0);
 
-    void init(float max_input = 0, float min_input = 0, float max_output = 0, float min_output = 0);
+    void init(float min_input = 0, float max_input = 0, float min_output = 0, float max_output = 0);
     void write(float duty);
     float getDuty();
 };

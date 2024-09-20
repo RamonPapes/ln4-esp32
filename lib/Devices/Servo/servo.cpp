@@ -1,21 +1,29 @@
 
 #include "servo.hpp"
 
-float servo_mode[SERVO_QTY][4] = {{1, -1, 2.79, 0.214}, {90, -90, 2, 1}};
+float servo_mode[4] = {-1, 1, 0.214, 2.79};
 
 servo::servo(PWM &Pin) : m_Pin(Pin) {}
 
-void servo::init(servo_mode_t mode)
+void servo::init()
 {
-    m_max_input = servo_mode[mode][0];
-    m_min_input = servo_mode[mode][1];
+    if(m_has_init) return;
+    
+    m_Pin.init(0, 20);
 
-    m_max_output = servo_mode[mode][2];
-    m_min_output = servo_mode[mode][3];
+    m_max_input = servo_mode[0];
+    m_min_input = servo_mode[1];
+
+    m_max_output = servo_mode[2];
+    m_min_output = servo_mode[3];
+
+    m_has_init = true;
 }
 
 void servo::set_max_power(float value)
 {
+    if(!m_has_init) return;
+
     if(value > 1) value = 1;
     else if(value < -1) value = -1;
 
@@ -24,21 +32,29 @@ void servo::set_max_power(float value)
 
 float servo::get_max_power()
 {
+    if(!m_has_init) return 0;
+
     return m_max_power;
 }
 
 void servo::write(float value)
 {
+    if(!m_has_init) return;
+
     m_Pin.write(calculate_PWM(value*m_max_power));
 }
 
 float servo::read()
 {
+    if(!m_has_init) return 0;
+
     return inv_calculate_PWM(m_Pin.getDuty())/m_max_power;
 }
 
 void servo::set_power(float value)
 {
+    if(!m_has_init) return;
+
     if(value > m_max_input) value = m_max_input;
     if(value < m_min_input) value = m_min_input;
     
@@ -47,21 +63,29 @@ void servo::set_power(float value)
 
 float servo::get_power()
 {
+    if(!m_has_init) return 0;
+
     return m_power;
 }
 
 void servo::front()
 {
+    if(!m_has_init) return;
+
     m_Pin.write(calculate_PWM(m_power*m_max_power));
 }
 
 void servo::back()
 {
+    if(!m_has_init) return;
+
     m_Pin.write(calculate_PWM(-m_power*m_max_power));
 }
 
 void servo::stop()
 {
+    if(!m_has_init) return;
+
     m_Pin.write(calculate_PWM(0));
 }
 

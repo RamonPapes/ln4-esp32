@@ -12,7 +12,7 @@ PWM::PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz)
     m_freq_hz = freq_hz;
 }
 
-void PWM::init(float max_input, float min_input, float max_output, float min_output)
+void PWM::init(float min_input, float max_input, float min_output, float max_output)
 {
     if(m_has_init) return;
 

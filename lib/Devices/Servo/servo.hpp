@@ -3,20 +3,13 @@
 
 #include "PWM/pwm.hpp"
 
-typedef enum
-{
-    SERVO_CONTINUO,
-    SERVO_POSICA0_180,
-    SERVO_QTY
-}servo_mode_t;
-
 class servo
 {
     
     public:
         servo(PWM &Pin);
 
-        void init(servo_mode_t mode);
+        void init();
 
         void set_max_power(float value);
         float get_max_power();
@@ -45,6 +38,8 @@ class servo
 
         float m_power = 1;
         float m_max_power = 1;
+
+        bool m_has_init = false;
 };
 
 
