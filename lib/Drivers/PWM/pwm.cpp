@@ -116,7 +116,7 @@ void PWM::write(float duty)
 
 float PWM::getDuty()
 {
-    if(!m_has_init) return;
+    if(!m_has_init) return 0;
 
     return inv_calculate_duty(ledc_get_duty(m_mode, m_channel));
 }

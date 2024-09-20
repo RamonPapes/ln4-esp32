@@ -56,7 +56,7 @@ void Pit::reset()
 
 bool Pit::read()
 {
-    if(!m_has_init) return;
+    if(!m_has_init) return false;
 
     uint64_t currentPitCount;
 
@@ -73,7 +73,7 @@ bool Pit::read()
 
 uint64_t Pit::get()
 {
-    if(!m_has_init) return;
+    if(!m_has_init) return 0;
     
     uint64_t currentPitCount;
     ESP_ERROR_CHECK(gptimer_get_raw_count(gptimer, &currentPitCount));

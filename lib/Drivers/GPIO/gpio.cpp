@@ -41,12 +41,14 @@ void Gpio::write(bool value)
 
     gpio_set_level(m_pin, value);
 }
+
 bool Gpio::read()
 {
     if(!m_has_init) return false;
 
     return gpio_get_level(m_pin);
 }
+
 void Gpio::toggle()
 {
     if(!m_has_init) return;
