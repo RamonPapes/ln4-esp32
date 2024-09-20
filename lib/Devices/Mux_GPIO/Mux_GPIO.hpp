@@ -13,6 +13,8 @@ protected:
 
     uint8_t m_id_mult = 0;
 
+    bool m_has_init = false;
+
 private:
     class channel_MUX_GPIO : public Gpio
     {
@@ -33,7 +35,7 @@ private:
 public:
     Mux_GPIO(Gpio &PIN, Gpio &S0, Gpio &S1, Gpio &S2);
 
-    void init();
+    void init(gpio_mode_t mode = GPIO_MODE_INPUT_OUTPUT);
 
     channel_MUX_GPIO channel_0;
     channel_MUX_GPIO channel_1;
