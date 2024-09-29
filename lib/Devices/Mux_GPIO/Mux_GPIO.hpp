@@ -3,6 +3,19 @@
 
 #include "GPIO/gpio.hpp"
 
+enum enum_channel_t : uint8_t
+{
+    CHANNEL_0,
+    CHANNEL_1,
+    CHANNEL_2,
+    CHANNEL_3,
+    CHANNEL_4,
+    CHANNEL_5,
+    CHANNEL_6,
+    CHANNEL_7,
+    CHANNEL_MAX
+};
+
 class Mux_GPIO
 {
 protected:
@@ -32,19 +45,28 @@ private:
             void toggle();
     };
 
+    channel_MUX_GPIO m_channel[8] = {
+        channel_MUX_GPIO(*this),
+        channel_MUX_GPIO(*this),
+        channel_MUX_GPIO(*this),
+        channel_MUX_GPIO(*this),
+        channel_MUX_GPIO(*this),
+        channel_MUX_GPIO(*this),
+        channel_MUX_GPIO(*this),
+        channel_MUX_GPIO(*this)
+    };
+
 public:
     Mux_GPIO(Gpio &PIN, Gpio &S0, Gpio &S1, Gpio &S2);
 
     void init(gpio_mode_t mode = GPIO_MODE_INPUT_OUTPUT);
 
-    channel_MUX_GPIO channel_0;
-    channel_MUX_GPIO channel_1;
-    channel_MUX_GPIO channel_2;
-    channel_MUX_GPIO channel_3;
-    channel_MUX_GPIO channel_4;
-    channel_MUX_GPIO channel_5;
-    channel_MUX_GPIO channel_6;
-    channel_MUX_GPIO channel_7;
+    void channel(Gpio &obj_channel, enum_channel_t num_channel);
+
+    Gpio operator[](int valor)
+    {
+        return m_channel[valor];
+    }
 };
 
 #endif
