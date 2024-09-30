@@ -29,28 +29,6 @@ MUX_ADC::channel_MUX_ADC::channel_MUX_ADC(MUX_ADC &mux)
     m_id = m_mux.m_id_mult++;
 }
 
-void MUX_ADC::channel_MUX_ADC::setAttenuation(adc_atten_t atten) 
-{
-    if(!m_mux.m_has_init) return;
-
-    m_mux.m_S0.write(m_id & 0b001);
-    m_mux.m_S1.write(m_id & 0b010);
-    m_mux.m_S2.write(m_id & 0b100);
-
-    m_mux.m_PIN.setAttenuation(atten);
-}
-
-void MUX_ADC::channel_MUX_ADC::setWidth(adc_bits_width_t width) 
-{
-    if(!m_mux.m_has_init) return;
-
-    m_mux.m_S0.write(m_id & 0b001);
-    m_mux.m_S1.write(m_id & 0b010);
-    m_mux.m_S2.write(m_id & 0b100);
-
-    m_mux.m_PIN.setWidth(width);
-}
-
 void MUX_ADC::channel_MUX_ADC::init() {}
 
 int MUX_ADC::channel_MUX_ADC::getVoltage()

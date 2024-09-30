@@ -26,8 +26,6 @@ class MUX_ADC
 
             channel_MUX_ADC(MUX_ADC &mux);
             
-            void setAttenuation(adc_atten_t atten);
-            void setWidth(adc_bits_width_t width);
             void init();
             int getVoltage();
             int get();

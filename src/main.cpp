@@ -18,7 +18,7 @@ extern "C" void app_main()
 
     while (1)
     {
-        bool valor = sensorEsquerda.channel_0.read();
+        bool valor = sensorEsquerda[0].read();
         printlnf("VALOR: %d", valor);
         Pit::delay(100);
     }
