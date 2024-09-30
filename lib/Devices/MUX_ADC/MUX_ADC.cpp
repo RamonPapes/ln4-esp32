@@ -1,15 +1,7 @@
 #include "MUX_ADC.hpp"
 
 MUX_ADC::MUX_ADC(Adc &PIN, Gpio &S0, Gpio &S1, Gpio &S2)
-    : m_S0(S0), m_S1(S1), m_S2(S2), m_PIN(PIN),
-        channel_0(*this),
-        channel_1(*this),
-        channel_2(*this),
-        channel_3(*this),
-        channel_4(*this),
-        channel_5(*this),
-        channel_6(*this),
-        channel_7(*this) {}
+    : m_S0(S0), m_S1(S1), m_S2(S2), m_PIN(PIN) {}
 
 void MUX_ADC::init()
 {
@@ -21,6 +13,11 @@ void MUX_ADC::init()
     m_S2.init(GPIO_MODE_OUTPUT);
 
     m_has_init = true;
+}
+
+void MUX_ADC::channel(Adc &obj_channel, enum_channel_t num_channel)
+{
+    obj_channel = m_channel[num_channel];
 }
 
 MUX_ADC::channel_MUX_ADC::channel_MUX_ADC(MUX_ADC &mux)

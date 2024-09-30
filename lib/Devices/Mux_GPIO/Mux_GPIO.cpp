@@ -1,8 +1,7 @@
 #include "Mux_GPIO.hpp"
 
 Mux_GPIO::Mux_GPIO(Gpio &PIN, Gpio &S0, Gpio &S1, Gpio &S2)
-    : m_S0(S0), m_S1(S1), m_S2(S2), m_PIN(PIN)
-{}
+    : m_S0(S0), m_S1(S1), m_S2(S2), m_PIN(PIN) {}
 
 void Mux_GPIO::init(gpio_mode_t mode)
 {
