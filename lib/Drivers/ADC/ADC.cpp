@@ -1,23 +1,67 @@
-#include "ADC.hpp";
+#include "ADC.hpp"
+#include "math.h"
 
-#define D_MAX 4085
-#define MAX_VOLTS 2450
+#define D_MAX 4095
+#define MAX_VOLTS 3
+#define MIN_VOLTS 0.1
+
+Adc::Adc() {}
 
 Adc::Adc(adc1_channel_t channel)
-    : _channel(channel) {}
+    : m_channel(channel) {}
 
-void Adc::init()
+void Adc::init(float min_output, float max_output, float min_input, float max_input)
 {
-    ESP_ERROR_CHECK(adc1_config_width(_width));
-    ESP_ERROR_CHECK(adc1_config_channel_atten(_channel, _atten));
+    if(m_has_init) return;
+
+    ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_12));
+    ESP_ERROR_CHECK(adc1_config_channel_atten(m_channel, ADC_ATTEN_DB_11));
+
+    if(min_output == max_output)
+    {
+        m_min_output = 0;
+        m_max_output = pow(2, (uint8_t)ADC_WIDTH_BIT_12);
+        m_min_input = 0;
+        m_max_input = pow(2, (uint8_t)ADC_WIDTH_BIT_12);
+    }else
+    if(min_input == max_input)
+    {
+        m_min_output = min_output;
+        m_max_output = max_output;
+        m_min_input = 0;
+        m_max_input = pow(2, (uint8_t)ADC_WIDTH_BIT_12);
+    }else
+    {
+        m_min_output = min_output;
+        m_max_output = max_output;
+        m_min_input = min_input;
+        m_max_input = max_input;
+    }
+
+    m_has_init = true;
 }
 
-int Adc::get()
+float Adc::read()
 {
-    return  adc1_get_raw(_channel); 
+    if(!m_has_init) return;
+
+    return  calculate_value(adc1_get_raw(m_channel)); 
 }
 
-int Adc::getVoltage()
+float Adc::readVolt()
 {
-    return this->get() * MAX_VOLTS / D_MAX;
+    if(!m_has_init) return;
+
+    return adc1_get_raw(m_channel)*(float)(MAX_VOLTS-MIN_VOLTS) / D_MAX + MIN_VOLTS;
+}
+
+float Adc::calculate_value(int value)
+{
+    if(m_max_output == 0 && m_min_output == 0) return value;
+    
+    if(value > m_max_input) value = m_max_input;
+    if(value < m_min_input) value = m_min_input;
+
+    float coeficiente_angular = (m_max_output - m_min_output)/(m_max_input - m_min_input);
+    return (value - m_min_input)*coeficiente_angular + m_min_output;
 }

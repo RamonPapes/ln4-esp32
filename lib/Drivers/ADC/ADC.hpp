@@ -10,14 +10,23 @@ protected:
     Adc();
 public:
     Adc(adc1_channel_t channel);
-    void init();
-    int getVoltage();
-    int get();
+
+    void init(float min_output = 0, float max_output = 0, float min_input = 0, float max_input = 0);
+
+    float read();
+    float readVolt();
 
 private:
-    adc1_channel_t _channel;
-    adc_atten_t _atten = ADC_ATTEN_DB_11;      // Atenuação
-    adc_bits_width_t _width = ADC_WIDTH_BIT_12; // Largura de bit
+    bool m_has_init = false;
+
+    adc1_channel_t m_channel;
+
+    float m_max_input;
+    float m_min_input;
+    float m_max_output;
+    float m_min_output;
+
+    float calculate_value(int value);
 };
 
 #endif
