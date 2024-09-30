@@ -3,6 +3,7 @@
 
 #include "freertos/FreeRTOS.h"
 #include "driver/adc.h"
+#include "math.h"
 
 class Adc
 {

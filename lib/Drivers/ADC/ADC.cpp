@@ -1,5 +1,4 @@
 #include "ADC.hpp"
-#include "math.h"
 
 #define D_MAX 4095
 #define MAX_VOLTS 3
