@@ -6,15 +6,28 @@
 
 Adc::Adc() {}
 
-Adc::Adc(adc1_channel_t channel)
-    : m_channel(channel) {}
+Adc::Adc(adc1_channel_t channel) : m_channel(channel)
+{
+    m_number = 0;
+}
+
+Adc::Adc(adc2_channel_t channel) : m_channel_2(channel)
+{
+    m_number = 1;
+}
 
 void Adc::init(float min_output, float max_output, float min_input, float max_input)
 {
     if(m_has_init) return;
 
-    ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_12));
-    ESP_ERROR_CHECK(adc1_config_channel_atten(m_channel, ADC_ATTEN_DB_11));
+    if(!m_number)
+    {
+        ESP_ERROR_CHECK(adc1_config_width(ADC_WIDTH_BIT_12));
+        ESP_ERROR_CHECK(adc1_config_channel_atten(m_channel, ADC_ATTEN_DB_12));
+    }else
+    {
+        ESP_ERROR_CHECK(adc2_config_channel_atten(m_channel_2, ADC_ATTEN_DB_12));
+    }
 
     if(min_output == max_output)
     {
@@ -42,16 +55,24 @@ void Adc::init(float min_output, float max_output, float min_input, float max_in
 
 float Adc::read()
 {
-    if(!m_has_init) return;
+    if(!m_has_init) return 0;
 
-    return  calculate_value(adc1_get_raw(m_channel)); 
+    if (!m_number)
+        return  calculate_value(adc1_get_raw(m_channel)); 
+
+    adc2_get_raw(m_channel_2, ADC_WIDTH_BIT_12, &m_value);
+    return calculate_value(m_value);
 }
 
 float Adc::readVolt()
 {
-    if(!m_has_init) return;
+    if(!m_has_init) return 0;
 
-    return adc1_get_raw(m_channel)*(float)(MAX_VOLTS-MIN_VOLTS) / D_MAX + MIN_VOLTS;
+    if (!m_number)
+        return adc1_get_raw(m_channel)*(float)(MAX_VOLTS-MIN_VOLTS) / D_MAX + MIN_VOLTS;
+
+    adc2_get_raw(m_channel_2, ADC_WIDTH_BIT_12, &m_value);
+    return m_value*(float)(MAX_VOLTS-MIN_VOLTS) / D_MAX + MIN_VOLTS;
 }
 
 float Adc::calculate_value(int value)
