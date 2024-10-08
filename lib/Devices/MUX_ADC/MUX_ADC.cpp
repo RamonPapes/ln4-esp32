@@ -15,7 +15,7 @@ void MUX_ADC::init()
     m_has_init = true;
 }
 
-void MUX_ADC::channel(Adc &obj_channel, enum_channel_t num_channel)
+void MUX_ADC::channel(Adc &obj_channel, enum_channel_adc_t num_channel)
 {
     obj_channel = m_channel[num_channel];
 }
@@ -28,24 +28,24 @@ MUX_ADC::channel_MUX_ADC::channel_MUX_ADC(MUX_ADC &mux)
 
 void MUX_ADC::channel_MUX_ADC::init() {}
 
-int MUX_ADC::channel_MUX_ADC::getVoltage()
+int MUX_ADC::channel_MUX_ADC::readVolt()
 {
-    if(!m_mux.m_has_init) return;
+    if(!m_mux.m_has_init) return 0;
 
     m_mux.m_S0.write(m_id & 0b001);
     m_mux.m_S1.write(m_id & 0b010);
     m_mux.m_S2.write(m_id & 0b100);
 
-    return m_mux.m_PIN.getVoltage();
+    return m_mux.m_PIN.readVolt();
 }
 
-int MUX_ADC::channel_MUX_ADC::get()
+int MUX_ADC::channel_MUX_ADC::read()
 {
-    if(!m_mux.m_has_init) return;
+    if(!m_mux.m_has_init) return 0;
 
     m_mux.m_S0.write(m_id & 0b001);
     m_mux.m_S1.write(m_id & 0b010);
     m_mux.m_S2.write(m_id & 0b100);
 
-    return m_mux.m_PIN.get();
+    return m_mux.m_PIN.read();
 }

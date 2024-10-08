@@ -4,17 +4,17 @@
 #include "ADC/ADC.hpp"
 #include "GPIO/gpio.hpp"
 
-enum enum_channel_t : uint8_t
+enum enum_channel_adc_t
 {
-    CHANNEL_0,
-    CHANNEL_1,
-    CHANNEL_2,
-    CHANNEL_3,
-    CHANNEL_4,
-    CHANNEL_5,
-    CHANNEL_6,
-    CHANNEL_7,
-    CHANNEL_MAX
+    P_ADC_CHANNEL_0,
+    P_ADC_CHANNEL_1,
+    P_ADC_CHANNEL_2,
+    P_ADC_CHANNEL_3,
+    P_ADC_CHANNEL_4,
+    P_ADC_CHANNEL_5,
+    P_ADC_CHANNEL_6,
+    P_ADC_CHANNEL_7,
+    P_ADC_CHANNEL_MAX
 };
 
 class MUX_ADC
@@ -40,8 +40,8 @@ private:
         channel_MUX_ADC(MUX_ADC &mux);
         
         void init();
-        int getVoltage();
-        int get();
+        int readVolt();
+        int read();
     };
 
     channel_MUX_ADC m_channel[8] = {
@@ -60,7 +60,7 @@ public:
 
     void init();
 
-    void channel(Adc &obj_channel, enum_channel_t num_channel);
+    void channel(Adc &obj_channel, enum_channel_adc_t num_channel);
 
     Adc operator[](int valor)
     {

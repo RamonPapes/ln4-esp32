@@ -3,17 +3,17 @@
 
 #include "GPIO/gpio.hpp"
 
-enum enum_channel_t : uint8_t
+enum enum_channel_gpio_t
 {
-    CHANNEL_0,
-    CHANNEL_1,
-    CHANNEL_2,
-    CHANNEL_3,
-    CHANNEL_4,
-    CHANNEL_5,
-    CHANNEL_6,
-    CHANNEL_7,
-    CHANNEL_MAX
+    GPIO_CHANNEL_0,
+    GPIO_CHANNEL_1,
+    GPIO_CHANNEL_2,
+    GPIO_CHANNEL_3,
+    GPIO_CHANNEL_4,
+    GPIO_CHANNEL_5,
+    GPIO_CHANNEL_6,
+    GPIO_CHANNEL_7,
+    GPIO_CHANNEL_MAX
 };
 
 class Mux_GPIO
@@ -61,7 +61,7 @@ public:
 
     void init(gpio_mode_t mode = GPIO_MODE_INPUT_OUTPUT);
 
-    void channel(Gpio &obj_channel, enum_channel_t num_channel);
+    void channel(Gpio &obj_channel, enum_channel_gpio_t num_channel);
 
     Gpio operator[](int valor)
     {

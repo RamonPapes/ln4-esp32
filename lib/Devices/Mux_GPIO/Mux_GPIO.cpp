@@ -15,7 +15,7 @@ void Mux_GPIO::init(gpio_mode_t mode)
     m_has_init = true;
 }
 
-void Mux_GPIO::channel(Gpio &obj_channel, enum_channel_t num_channel)
+void Mux_GPIO::channel(Gpio &obj_channel, enum_channel_gpio_t num_channel)
 {
     obj_channel = m_channel[num_channel];
 }
