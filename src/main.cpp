@@ -2,24 +2,53 @@
 #include "drivers.hpp"
 #include "util.hpp"
 
-Gpio pin16(GPIO_NUM_16);
-Gpio pin17(GPIO_NUM_17);
-Gpio pin15(GPIO_NUM_15);
-Gpio pin2(GPIO_NUM_2);
-Gpio pin4(GPIO_NUM_4);
+Adc sensor[8] = {
+    Adc(ADC1_CHANNEL_0),
+    Adc(ADC1_CHANNEL_3),
+    Adc(ADC1_CHANNEL_6),
+    Adc(ADC1_CHANNEL_7),
+    Adc(ADC1_CHANNEL_4),
+    Adc(ADC1_CHANNEL_5),
+    Adc(ADC2_CHANNEL_8),
+    Adc(ADC2_CHANNEL_9)
+};
 
-Mux_GPIO sensorEsquerda(pin16, pin15, pin2, pin4);
-Mux_GPIO sensorDireita(pin17, pin15, pin2, pin4);
+PWM AIN1(GPIO_NUM_23, LEDC_TIMER_12_BIT);
+PWM AIN2(GPIO_NUM_22, LEDC_TIMER_12_BIT);
+PWM BIN1(GPIO_NUM_21, LEDC_TIMER_12_BIT);
+PWM BIN2(GPIO_NUM_19, LEDC_TIMER_12_BIT);
+
+DRV8833 motor1(AIN1, AIN2);
+DRV8833 motor2(BIN1, BIN2);
+
 
 extern "C" void app_main() 
 {
-    sensorEsquerda.init();
-    sensorDireita.init();
+    sensor[0].init(-0.375, -0.5, 2040, 3770);
+    sensor[1].init(-0.25, -0.375, 2200, 3620);
+    sensor[2].init(-0.125, -0.25, 2390, 3630);
+    sensor[3].init(0, -0.125, 2340, 3430);
+    sensor[4].init(0, 0.125, 2040, 3120);
+    sensor[5].init(0.125, 0.25, 1980, 3160);
+    sensor[6].init(0.25, 0.375, 1990, 3790);
+    sensor[7].init(0.375, 0.5, 1980, 3590);
+
+    motor1.init();
+    motor2.init();
+
+    motor1.set_power(0.5);
+    motor2.set_power(0.5);
+
+    float value;
 
     while (1)
     {
-        bool valor = sensorEsquerda[0].read();
-        printlnf("VALOR: %d", valor);
-        Pit::delay(100);
+        // value = 0;
+        // for (size_t i = 0; i < 8; i++)
+        // {
+        //     value += sensor[i].read();
+        //     printf(" [%d]%f ", i, sensor[i].read());
+        // }
+        // printlnf("diferencial: %f", value);
     }
 }
