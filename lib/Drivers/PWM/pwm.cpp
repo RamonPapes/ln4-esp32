@@ -4,6 +4,7 @@ static ledc_timer_bit_t timer_resolution[LEDC_TIMER_MAX];
 static uint8_t timer_lock[LEDC_TIMER_MAX];
 static uint8_t channel_lock[LEDC_SPEED_MODE_MAX][LEDC_CHANNEL_MAX];
 
+PWM::PWM(){}
 
 PWM::PWM(gpio_num_t pin, ledc_timer_bit_t resolution, uint32_t freq_hz)
 {
