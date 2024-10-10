@@ -21,6 +21,8 @@ PWM BIN2(GPIO_NUM_19, LEDC_TIMER_12_BIT);
 DRV8833 motor1(AIN1, AIN2);
 DRV8833 motor2(BIN1, BIN2);
 
+Driver_Drv8833 driver(motor1, motor2);
+
 
 extern "C" void app_main() 
 {
@@ -33,22 +35,18 @@ extern "C" void app_main()
     sensor[6].init(0.25, 0.375, 1990, 3790);
     sensor[7].init(0.375, 0.5, 1980, 3590);
 
-    motor1.init();
-    motor2.init();
+    driver.init();
 
-    motor1.set_power(0.5);
-    motor2.set_power(0.5);
+    driver.set_max_power(0.5);
 
-    float value;
+    float direction;
 
     while (1)
     {
-        // value = 0;
-        // for (size_t i = 0; i < 8; i++)
-        // {
-        //     value += sensor[i].read();
-        //     printf(" [%d]%f ", i, sensor[i].read());
-        // }
-        // printlnf("diferencial: %f", value);
+        direction = 0;
+        for (size_t i = 0; i < 8; i++) direction += sensor[i].read();
+        driver.arcade_driver(0.25+abs(direction)*0.75, direction);
+        printlnf("diferencial: %f", direction);
+        vTaskDelay(1);
     }
 }
