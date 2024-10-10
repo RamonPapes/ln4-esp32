@@ -45,11 +45,13 @@ extern "C" void app_main()
     while (1)
     {
         direction = 0;
+        chegada = 0;
         for (size_t i = 0; i < 8; i++) direction += sensor[i].read();
-        driver.arcade_driver(0.25+abs(direction)*0.75, direction);
+        driver.arcade_driver(0.25+(1-abs(direction))*0.75, direction);
         for (int i = 0; i < 8; i++) chegada += abs(sensor[i].read());
-        if(chegada >= 1.8) break;
+        if(chegada >= 4.8) break;
         printlnf("diferencial: %f", direction);
+        printlnf("chegada: %f",chegada);
         vTaskDelay(1);
     }
     driver.motor_driver(0, 0);
